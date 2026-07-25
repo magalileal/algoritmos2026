@@ -1,0 +1,33 @@
+Nombres de los integrantes del grupo:
+Sabrina Lacuesta
+
+Enunciado: 
+Se debe desarrollar una solución algorítmica para el análisis de los resultados de las elecciones PASO Nacionales en la Ciudad Autónoma
+de Buenos Aires correspondientes al año 2023, donde se deberán renovar trece bancas, correspondientes a igual número de diputados
+nacionales.
+Se presentan 7 listas con 10 candidatos cada una, los primeros 5 corresponden a candidatos” titulares” mientras que los restantes son
+candidatos “suplentes”.
+Una vez realizada la elección, para el escrutinio (conteo de votos) se utilizará el Sistema D´Hont, mecanismo que se utiliza para la
+asignación de las bancas.
+Para una correcta comprensión del problema planteado es importante que vean documentación acerca de la distribución de bancas en
+una elección, para lo cual les proponemos varios links (no son los únicos publicados).
+Para desarrollar el algoritmo se cuenta con las siguientes fuentes de datos:
+1. Por cada lista: número de lista; nombre de la lista y nombre de cada uno de los candidatos
+2. Información de cada uno de los votos (número entre 1 y 7 o algún otro valor; identidad de género del/la votante (Femenino, Masculino, Otro); edad del
+votante en años).
+Los números entre 1 y 7 son votos válidos, mientras que cualquier otro valor es un voto nulo. El valor 0 representa un voto en blanco.
+Primera entrega: arreglos
+Se debe desarrollar un algoritmo para distribuir las bancas de acuerdo al conteo de votos.
+1. Describir la estructura necesaria para la resolución del problema
+2. Mostrar por pantalla una tabla indicando claramente los números de lista, nombre de la
+lista, la cantidad de votos de cada lista y porcentaje entre los votos válidos, ordenado de
+mayor a menor, la cantidad de votos nulos y de votos en blanco.
+3. Mostrar por pantalla una tabla como la del ejemplo de más arriba, indicando claramente
+para cada lista los nombres de los candidatos que obtienen banca
+4. Mostrar por pantalla, para cada lista la cantidad de votos por rango de edades: hasta 18
+años; hasta 30 años; hasta 50 años; más de 50 años.
+
+Lote de prueba;
+Diagrama o pseudocódigo;
+Código C++
+Copia de pantalla con los resultados del proceso
