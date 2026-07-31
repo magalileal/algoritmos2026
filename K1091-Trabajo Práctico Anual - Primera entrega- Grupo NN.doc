@@ -1,34 +1,25 @@
 Nombres de los integrantes del grupo:
 Sabrina Lacuesta
-Francisco Soria
 
 Enunciado: 
-Se debe desarrollar una soluci√≥n algor√≠tmica para el an√°lisis de los resultados de las elecciones PASO Nacionales en la Ciudad Aut√≥noma
-de Buenos Aires correspondientes al a√±o 2023, donde se deber√°n renovar trece bancas, correspondientes a igual n√∫mero de diputados
-nacionales.
-Se presentan 7 listas con 10 candidatos cada una, los primeros 5 corresponden a candidatos‚Äù titulares‚Äù mientras que los restantes son
-candidatos ‚Äúsuplentes‚Äù.
-Una vez realizada la elecci√≥n, para el escrutinio (conteo de votos) se utilizar√° el Sistema D¬¥Hont, mecanismo que se utiliza para la
-asignaci√≥n de las bancas.
-Para una correcta comprensi√≥n del problema planteado es importante que vean documentaci√≥n acerca de la distribuci√≥n de bancas en
-una elecci√≥n, para lo cual les proponemos varios links (no son los √∫nicos publicados).
+Se debe desarrollar una soluciÛn algorÌtmica para el an·lisis de los resultados de las elecciones PASO Nacionales en la Ciudad AutÛnoma de Buenos Aires correspondientes al aÒo 2023, donde se deber·n renovar trece bancas, correspondientes a igual n˙mero de diputados nacionales.
+Se presentan 7 listas con 10 candidatos cada una, los primeros 5 corresponden a candidatosî titularesî mientras que los restantes son candidatos ìsuplentesî.
+Una vez realizada la elecciÛn, para el escrutinio (conteo de votos) se utilizar· el Sistema D¥Hont, mecanismo que se utiliza para la asignaciÛn de las bancas.
+Para una correcta comprensiÛn del problema planteado es importante que vean documentaciÛn acerca de la distribuciÛn de bancas en
+una elecciÛn, para lo cual les proponemos varios links (no son los ˙nicos publicados).
 Para desarrollar el algoritmo se cuenta con las siguientes fuentes de datos:
-1. Por cada lista: n√∫mero de lista; nombre de la lista y nombre de cada uno de los candidatos
-2. Informaci√≥n de cada uno de los votos (n√∫mero entre 1 y 7 o alg√∫n otro valor; identidad de g√©nero del/la votante (Femenino, Masculino, Otro); edad del
-votante en a√±os).
-Los n√∫meros entre 1 y 7 son votos v√°lidos, mientras que cualquier otro valor es un voto nulo. El valor 0 representa un voto en blanco.
+1. Por cada lista: n˙mero de lista; nombre de la lista y nombre de cada uno de los candidatos
+2. InformaciÛn de cada uno de los votos (n˙mero entre 1 y 7 o alg˙n otro valor; identidad de gÈnero del/la votante (Femenino, Masculino, Otro); edad del
+votante en aÒos).
+Los n˙meros entre 1 y 7 son votos v·lidos, mientras que cualquier otro valor es un voto nulo. El valor 0 representa un voto en blanco.
 Primera entrega: arreglos
 Se debe desarrollar un algoritmo para distribuir las bancas de acuerdo al conteo de votos.
-1. Describir la estructura necesaria para la resoluci√≥n del problema
-2. Mostrar por pantalla una tabla indicando claramente los n√∫meros de lista, nombre de la
-lista, la cantidad de votos de cada lista y porcentaje entre los votos v√°lidos, ordenado de
-mayor a menor, la cantidad de votos nulos y de votos en blanco.
-3. Mostrar por pantalla una tabla como la del ejemplo de m√°s arriba, indicando claramente
-para cada lista los nombres de los candidatos que obtienen banca
-4. Mostrar por pantalla, para cada lista la cantidad de votos por rango de edades: hasta 18
-a√±os; hasta 30 a√±os; hasta 50 a√±os; m√°s de 50 a√±os.
+1. Describir la estructura necesaria para la resoluciÛn del problema
+2. Mostrar por pantalla una tabla indicando claramente los n˙meros de lista, nombre de la lista, la cantidad de votos de cada lista y porcentaje entre los votos v·lidos, ordenado de mayor a menor, la cantidad de votos nulos y de votos en blanco.
+3. Mostrar por pantalla una tabla como la del ejemplo de m·s arriba, indicando claramente para cada lista los nombres de los candidatos que obtienen banca
+4. Mostrar por pantalla, para cada lista la cantidad de votos por rango de edades: hasta 18 aÒos; hasta 30 aÒos; hasta 50 aÒos; m·s de 50 aÒos.
 
 Lote de prueba;
-Diagrama o pseudoc√≥digo;
-C√≥digo C++
+Diagrama o pseudocÛdigo;
+CÛdigo C++
 Copia de pantalla con los resultados del proceso
