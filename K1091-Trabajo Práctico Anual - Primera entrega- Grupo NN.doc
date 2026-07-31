@@ -1,33 +1,34 @@
 Nombres de los integrantes del grupo:
 Sabrina Lacuesta
+Francisco Soria
 
 Enunciado: 
-Se debe desarrollar una solución algorítmica para el análisis de los resultados de las elecciones PASO Nacionales en la Ciudad Autónoma
-de Buenos Aires correspondientes al año 2023, donde se deberán renovar trece bancas, correspondientes a igual número de diputados
+Se debe desarrollar una soluciÃ³n algorÃ­tmica para el anÃ¡lisis de los resultados de las elecciones PASO Nacionales en la Ciudad AutÃ³noma
+de Buenos Aires correspondientes al aÃ±o 2023, donde se deberÃ¡n renovar trece bancas, correspondientes a igual nÃºmero de diputados
 nacionales.
-Se presentan 7 listas con 10 candidatos cada una, los primeros 5 corresponden a candidatos” titulares” mientras que los restantes son
-candidatos “suplentes”.
-Una vez realizada la elección, para el escrutinio (conteo de votos) se utilizará el Sistema D´Hont, mecanismo que se utiliza para la
-asignación de las bancas.
-Para una correcta comprensión del problema planteado es importante que vean documentación acerca de la distribución de bancas en
-una elección, para lo cual les proponemos varios links (no son los únicos publicados).
+Se presentan 7 listas con 10 candidatos cada una, los primeros 5 corresponden a candidatosâ€ titularesâ€ mientras que los restantes son
+candidatos â€œsuplentesâ€.
+Una vez realizada la elecciÃ³n, para el escrutinio (conteo de votos) se utilizarÃ¡ el Sistema DÂ´Hont, mecanismo que se utiliza para la
+asignaciÃ³n de las bancas.
+Para una correcta comprensiÃ³n del problema planteado es importante que vean documentaciÃ³n acerca de la distribuciÃ³n de bancas en
+una elecciÃ³n, para lo cual les proponemos varios links (no son los Ãºnicos publicados).
 Para desarrollar el algoritmo se cuenta con las siguientes fuentes de datos:
-1. Por cada lista: número de lista; nombre de la lista y nombre de cada uno de los candidatos
-2. Información de cada uno de los votos (número entre 1 y 7 o algún otro valor; identidad de género del/la votante (Femenino, Masculino, Otro); edad del
-votante en años).
-Los números entre 1 y 7 son votos válidos, mientras que cualquier otro valor es un voto nulo. El valor 0 representa un voto en blanco.
+1. Por cada lista: nÃºmero de lista; nombre de la lista y nombre de cada uno de los candidatos
+2. InformaciÃ³n de cada uno de los votos (nÃºmero entre 1 y 7 o algÃºn otro valor; identidad de gÃ©nero del/la votante (Femenino, Masculino, Otro); edad del
+votante en aÃ±os).
+Los nÃºmeros entre 1 y 7 son votos vÃ¡lidos, mientras que cualquier otro valor es un voto nulo. El valor 0 representa un voto en blanco.
 Primera entrega: arreglos
 Se debe desarrollar un algoritmo para distribuir las bancas de acuerdo al conteo de votos.
-1. Describir la estructura necesaria para la resolución del problema
-2. Mostrar por pantalla una tabla indicando claramente los números de lista, nombre de la
-lista, la cantidad de votos de cada lista y porcentaje entre los votos válidos, ordenado de
+1. Describir la estructura necesaria para la resoluciÃ³n del problema
+2. Mostrar por pantalla una tabla indicando claramente los nÃºmeros de lista, nombre de la
+lista, la cantidad de votos de cada lista y porcentaje entre los votos vÃ¡lidos, ordenado de
 mayor a menor, la cantidad de votos nulos y de votos en blanco.
-3. Mostrar por pantalla una tabla como la del ejemplo de más arriba, indicando claramente
+3. Mostrar por pantalla una tabla como la del ejemplo de mÃ¡s arriba, indicando claramente
 para cada lista los nombres de los candidatos que obtienen banca
 4. Mostrar por pantalla, para cada lista la cantidad de votos por rango de edades: hasta 18
-años; hasta 30 años; hasta 50 años; más de 50 años.
+aÃ±os; hasta 30 aÃ±os; hasta 50 aÃ±os; mÃ¡s de 50 aÃ±os.
 
 Lote de prueba;
-Diagrama o pseudocódigo;
-Código C++
+Diagrama o pseudocÃ³digo;
+CÃ³digo C++
 Copia de pantalla con los resultados del proceso
