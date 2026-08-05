@@ -1,45 +1,69 @@
 #include <iostream>
-#include <random>
-#include <ctime>
 #include <fstream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
 
 #define CANT_VOTOS 10000
+#define TOPELISTAS 7
 
 int main() {
-    std::mt19937 gen(static_cast<unsigned int>(std::time(nullptr)));
 
-    std::discrete_distribution<int> distribucion({
-        0.003,  // nulo (-1)
-        0.004,  // blanco (0)
-        0.141, 0.141, 0.141, 0.141, 0.141, 0.141, 0.141 // listas 1-7
-    });
+    srand(time(NULL));
 
-    int voto;
-
-    std::ofstream archivo("lote_prueba.txt");
+    ofstream archivo("lote_prueba.txt");
 
     if (!archivo) {
-        std::cout << "Error al crear el archivo" << std::endl;
+        cout << "Error al crear el archivo" << endl;
         return 1;
     }
 
-    for (int i = 0; i < CANT_VOTOS; i++) {
-        int resultado = distribucion(gen);
+    int pesoNulo = 3;
+    int pesoBlanco = 4;
+    int pesoLista[TOPELISTAS] = {367, 288, 258, 20, 20, 20, 20}; // suma = 993
+    int total = pesoNulo + pesoBlanco;
+    for (int i = 0; i < TOPELISTAS; i++) total = total + pesoLista[i]; // total = 1000
 
-        if (resultado == 0) {
+    for (int i = 0; i < CANT_VOTOS; i++) {
+
+        // --- Numero de voto ---
+        int voto;
+        int azar = rand() % total;
+
+        if (azar < pesoNulo) {
             voto = -1; // nulo
-        } else if (resultado == 1) {
+        }
+        else if (azar < pesoNulo + pesoBlanco) {
             voto = 0; // blanco
-        } else {
-            voto = resultado - 1; // 1 a 7
+        }
+        else {
+            int acumulado = pesoNulo + pesoBlanco;
+            int lista = 0;
+            while (lista < TOPELISTAS - 1 && azar >= acumulado + pesoLista[lista]) {
+                acumulado = acumulado + pesoLista[lista];
+                lista++;
+            }
+            voto = lista + 1; // 1 a 7
         }
 
-        archivo << voto << " ";
+        // --- Genero del votante ---
+        char genero;
+        int azarGenero = rand() % 3;
+        if (azarGenero == 0) genero = 'F';
+        else if (azarGenero == 1) genero = 'M';
+        else genero = 'O';
+
+        // --- Edad del votante ---
+        int edad = 16 + rand() % 80;
+
+        archivo << voto << ";" << genero << ";" << edad << endl;
     }
 
     archivo.close();
 
-    std::cout << "Archivo lote_prueba.txt generado con " << CANT_VOTOS << " votos." << std::endl;
+    cout << "Archivo lote_prueba.txt generado con " << CANT_VOTOS << " votos." << endl;
 
     return 0;
 }
+
