@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -42,8 +43,6 @@ struct tRVoto {
 // --- PROTOTIPOS ---
 void cargarListas(tVListas listas);
 void inicializarEdades(tMatrizEdades edades);
-void parsear(string cadena, tRVoto & voto);
-void cargarVotos(char * archivo, tVListas listas, tMatrizEdades edades, int & blancos, int & nulos, int & totalValidos);
 bool alcanzaPiso(tLista lista, int totalValidos);
 void calcularDHondt(tVListas listas, int totalValidos, tMatrizCociente cocientes);
 void ordenarResultados(tVListas listas);
@@ -51,6 +50,11 @@ void mostrarResultados(tVListas listas, int blancos, int nulos, int totalValidos
 void mostrarTablaDHondt(tVListas listas, tMatrizCociente cocientes, int totalValidos);
 void mostrarCandidatosGanadores(tVListas listas);
 void mostrarEdades(tVListas listas, tMatrizEdades edades);
+void generarArchivoListas();
+void generarArchivoVotos();
+void leerListasDesdeArchivo(tVListas listas);
+void procesarVotosBinario(tVListas listas, tMatrizEdades edades, int& blancos, int& nulos, int& totalValidos);
+void guardarResultadosEnArchivo(tVListas listas, int blancos, int nulos, int totalValidos);
 
 // --- MAIN ---
 int main() {
@@ -58,25 +62,30 @@ int main() {
     tMatrizEdades edades;
     tMatrizCociente cocientes;
     int blancos = 0, nulos = 0, totalValidos = 0;
-    char archivoVotos[] = "lote_prueba.txt";
 
-    cargarListas(listas);
+    // 1. Generacion de los archivos fisicos
+    generarArchivoListas();
+    generarArchivoVotos();
+
+    // 2. Carga en memoria desde el archivo de Listas
+    leerListasDesdeArchivo(listas);
     inicializarEdades(edades);
 
-    // 1. Ingreso de datos: se leen desde el lote de prueba (archivo de texto)
-    cargarVotos(archivoVotos, listas, edades, blancos, nulos, totalValidos);
+    // 3. Procesamiento de los votos del archivo binario
+    procesarVotosBinario(listas, edades, blancos, nulos, totalValidos);
 
-    // 2. Se ordena una unica vez, de mayor a menor segun votos (aplica a
+    // 4. Calculos matemáticos del Sistema D'Hont
     ordenarResultados(listas);
-
-    // 3. Filtro del 3% y distribucion de las 13 bancas
     calcularDHondt(listas, totalValidos, cocientes);
 
-    // 4. Tablas de salida
-    mostrarResultados(listas, blancos, nulos, totalValidos);       
-    mostrarTablaDHondt(listas, cocientes, totalValidos);           
-    mostrarCandidatosGanadores(listas);                            
-    mostrarEdades(listas, edades);                                
+    // 5. Salidas por pantalla y guardado de resultados
+    mostrarResultados(listas, blancos, nulos, totalValidos);
+    mostrarTablaDHondt(listas, cocientes, totalValidos);
+    mostrarCandidatosGanadores(listas);
+    mostrarEdades(listas, edades);
+
+    // Genera el archivo de salida
+    guardarResultadosEnArchivo(listas, blancos, nulos, totalValidos);
 
     return 0;
 }
@@ -101,64 +110,6 @@ void inicializarEdades(tMatrizEdades edades) {
     for (int i = 0; i < TOPELISTAS; i++)
         for (int r = 0; r < TOPERANGOS; r++)
             edades[i][r] = 0;
-}
-
-// Separa una linea "voto;genero;edad" en los campos del registro tRVoto
-void parsear(string cadena, tRVoto & voto) {
-    int primero = 0;
-    int ultimo = 0;
-    string palabra[3];
-    int k = 0;
-
-    while (ultimo < (int)cadena.size() && k < 3) {
-        ultimo = cadena.find(";", primero);
-        if (ultimo == -1) ultimo = cadena.size();
-        palabra[k] = cadena.substr(primero, ultimo - primero);
-        k++;
-        primero = ultimo + 1;
-    }
-
-    voto.lista = atoi(palabra[0].c_str());
-    voto.genero = palabra[1].empty() ? '?' : palabra[1][0];
-    voto.edad = atoi(palabra[2].c_str());
-}
-
-// Abre el lote de prueba, lee linea a linea y acumula votos, blancos, nulos y la cantidad de votos por rango de edad de cada lista
-void cargarVotos(char * archivo, tVListas listas, tMatrizEdades edades, int & blancos, int & nulos, int & totalValidos) {
-    tRVoto voto;
-    string cadena;
-
-    ifstream fe(archivo);
-
-    if (!fe.is_open()) {
-        cout << "No se pudo abrir el archivo " << archivo << endl;
-        return;
-    }
-
-    while (getline(fe, cadena)) {
-        parsear(cadena, voto);
-
-        if (voto.lista >= 1 && voto.lista <= TOPELISTAS) {
-            listas[voto.lista - 1].votos++;
-            totalValidos++;
-
-            int rango;
-            if (voto.edad <= 18) rango = 0;
-            else if (voto.edad <= 30) rango = 1;
-            else if (voto.edad <= 50) rango = 2;
-            else rango = 3;
-
-            edades[voto.lista - 1][rango]++;
-        }
-        else if (voto.lista == 0) {
-            blancos++;
-        }
-        else {
-            nulos++;
-        }
-    }
-
-    fe.close();
 }
 
 // Indica si una lista alcanza el piso del 3% de los votos validos.
@@ -313,5 +264,140 @@ void mostrarEdades(tVListas listas, tMatrizEdades edades) {
         int idx = listas[i].numero - 1;
         printf("%-14s %10d %10d %10d %10d\n", listas[i].nombreLista,
                edades[idx][0], edades[idx][1], edades[idx][2], edades[idx][3]);
+    }
+}
+
+// Pide por pantalla listas/candidatos y graba en archivo
+void generarArchivoListas() {
+    FILE* arch = fopen("ListasCandidatos.dat", "wb");
+    if (arch == NULL) { cout << "Error al crear archivo de listas.\n"; return; }
+
+    tLista reg;
+    cout << "\n--- CARGA DE LISTAS Y CANDIDATOS ---\n";
+    for (int i = 0; i < TOPELISTAS; i++) {
+        reg.numero = i + 1;
+        cout << "Ingrese nombre para la Lista " << reg.numero << ": ";
+
+        // 'cin >> ws' limpia espacios blancos o Enters residuales en el buffer
+        cin >> ws;
+        // Leemos la linea completa incluyendo espacios (hasta 20 caracteres)
+        cin.getline(reg.nombreLista, 21);
+
+        reg.votos = 0;
+        reg.bancasGanadas = 0;
+
+        cout << "Cargando 10 candidatos (5 titulares, 5 suplentes)...\n";
+        for (int c = 0; c < TOPECAND; c++) {
+            cout << "  Candidato " << c + 1 << ": ";
+            // Como usamos solo getline de aca en adelante, el buffer ya esta limpio
+            cin.getline(reg.candidatos[c], 21);
+        }
+        fwrite(&reg, sizeof(tLista), 1, arch);
+    }
+    fclose(arch);
+    cout << "Archivo 'ListasCandidatos.dat' generado con exito.\n";
+}
+
+// Pide votos por pantalla, los ordena por lista y los graba
+void generarArchivoVotos() {
+    tRVoto lote[1000]; // Arreglo temporal para poder ordenarlos
+    int cantVotos = 0;
+
+    cout << "\n--- CARGA DE VOTOS ---\n";
+    cout << "Ingrese numero de lista votada (0=Blanco, 1-7=Valido, Otro=Nulo. Ingrese -1 para finalizar): ";
+    int listaIngresada;
+    cin >> listaIngresada;
+
+    while (listaIngresada != -1 && cantVotos < 1000) {
+        lote[cantVotos].lista = listaIngresada;
+        cout << "Genero (F/M/O): ";
+        cin >> lote[cantVotos].genero;
+        cout << "Edad: ";
+        cin >> lote[cantVotos].edad;
+
+        cantVotos++;
+        cout << "Ingrese numero de lista votada (-1 para finalizar): ";
+        cin >> listaIngresada;
+    }
+
+    // ORDENAMIENTO POR NUMERO DE LISTA
+    tRVoto aux;
+    for (int i = 0; i < cantVotos - 1; i++) {
+        for (int j = 0; j < cantVotos - i - 1; j++) {
+            if (lote[j].lista > lote[j + 1].lista) {
+                aux = lote[j];
+                lote[j] = lote[j + 1];
+                lote[j + 1] = aux;
+            }
+        }
+    }
+
+    // GUARDADO EN ARCHIVO
+    FILE* arch = fopen("VotosEmitidos.dat", "wb");
+    if (arch != NULL) {
+        for (int i = 0; i < cantVotos; i++) {
+            fwrite(&lote[i], sizeof(tRVoto), 1, arch);
+        }
+        fclose(arch);
+        cout << "Archivo 'VotosEmitidos.dat' generado y ordenado con exito.\n";
+    }
+}
+
+// Levanta el archivo binario de Listas al vector en memoria para usar D'Hont
+void leerListasDesdeArchivo(tVListas listas) {
+    FILE* arch = fopen("ListasCandidatos.dat", "rb");
+    if (arch == NULL) { cout << "Error al leer ListasCandidatos.dat\n"; return; }
+
+    tLista reg;
+    int i = 0;
+    while (fread(&reg, sizeof(tLista), 1, arch) && i < TOPELISTAS) {
+        listas[i] = reg;
+        i++;
+    }
+    fclose(arch);
+}
+
+// Modificar algoritmos para procesar desde archivo binario
+void procesarVotosBinario(tVListas listas, tMatrizEdades edades, int& blancos, int& nulos, int& totalValidos) {
+    FILE* arch = fopen("VotosEmitidos.dat", "rb");
+    if (arch == NULL) { cout << "Error al abrir VotosEmitidos.dat\n"; return; }
+
+    tRVoto voto;
+    // Leemos secuencialmente el archivo binario hasta el final
+    while (fread(&voto, sizeof(tRVoto), 1, arch)) {
+        if (voto.lista >= 1 && voto.lista <= TOPELISTAS) {
+            listas[voto.lista - 1].votos++;
+            totalValidos++;
+
+            int rango;
+            if (voto.edad <= 18) rango = 0;
+            else if (voto.edad <= 30) rango = 1;
+            else if (voto.edad <= 50) rango = 2;
+            else rango = 3;
+
+            edades[voto.lista - 1][rango]++;
+        }
+        else if (voto.lista == 0) {
+            blancos++;
+        }
+        else {
+            nulos++;
+        }
+    }
+    fclose(arch);
+}
+
+// Guarda un resumen de los resultados y bancas obtenidas en un archivo
+void guardarResultadosEnArchivo(tVListas listas, int blancos, int nulos, int totalValidos) {
+    FILE* arch = fopen("ResultadosFinales.txt", "w");
+    if (arch != NULL) {
+        fprintf(arch, "=== RESULTADOS FINALES PASO 2023 CABA ===\n");
+        fprintf(arch, "Total Validos: %d | Blancos: %d | Nulos: %d\n\n", totalValidos, blancos, nulos);
+        for (int i = 0; i < TOPELISTAS; i++) {
+            fprintf(arch, "Lista %d (%s): %d votos, %d Bancas obtenidas\n",
+                listas[i].numero, listas[i].nombreLista, listas[i].votos, listas[i].bancasGanadas);
+        }
+        fclose(arch);
+        cout << "\nResultados guardados correctamente en 'ResultadosFinales.txt'.\n";
     }
 }

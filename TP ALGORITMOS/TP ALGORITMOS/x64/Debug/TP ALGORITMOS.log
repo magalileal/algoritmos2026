@@ -1,0 +1,4 @@
+﻿  primeraentrega.cpp
+C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(184,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(212,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+  TP ALGORITMOS.vcxproj -> C:\Users\user\Downloads\Nueva carpeta\TP ALGORITMOS\x64\Debug\TP ALGORITMOS.exe
