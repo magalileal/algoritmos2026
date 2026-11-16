@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <cstdio>
-#include <direct.h>
 
 using namespace std;
 
@@ -72,10 +71,6 @@ void escrutinio();
 
 // MAIN
 int main() {
-        char ruta[500];
-    _getcwd(ruta, sizeof(ruta));
-
-    cout << "Directorio de trabajo: " << ruta << endl;
 
     int opcion;
 
