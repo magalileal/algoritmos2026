@@ -1,10 +1,10 @@
 === RESULTADOS FINALES PASO 2023 CABA ===
-Total Validos: 8 | Blancos: 1 | Nulos: 1
+Total Validos: 19 | Blancos: 1 | Nulos: 2
 
-Lista 2 (boca): 3 votos, 6 Bancas obtenidas
-Lista 7 (al): 2 votos, 4 Bancas obtenidas
-Lista 3 (utn): 1 votos, 1 Bancas obtenidas
-Lista 4 (qcy): 1 votos, 1 Bancas obtenidas
-Lista 6 (no): 1 votos, 1 Bancas obtenidas
-Lista 5 (terrible): 0 votos, 0 Bancas obtenidas
-Lista 1 (Si): 0 votos, 0 Bancas obtenidas
+Lista 4 (Colores): 6 votos, 6 Bancas obtenidas
+Lista 2 (Boca): 3 votos, 2 Bancas obtenidas
+Lista 1 (Utn): 3 votos, 2 Bancas obtenidas
+Lista 3 (Scaloneta): 2 votos, 1 Bancas obtenidas
+Lista 5 (Zoologico): 2 votos, 1 Bancas obtenidas
+Lista 6 (Argentina): 2 votos, 1 Bancas obtenidas
+Lista 7 (Sudamerica): 1 votos, 0 Bancas obtenidas

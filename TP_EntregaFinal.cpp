@@ -40,6 +40,21 @@ struct tRVoto {
     int edad;
 };
 
+// Nivel 2: Sublista para almacenar cada voto individual
+struct NodoVoto {
+    tRVoto info;
+    NodoVoto* sig;
+};
+
+// Nivel 1: Lista Principal para las Listas Políticas
+struct NodoListaPol {
+    tLista infoLista;      
+    int cantFemenino;      
+    int cantMasculino;     
+    NodoVoto* listaVotos;  
+    NodoListaPol* sig;
+};
+
 // --- PROTOTIPOS ---
 void cargarListas(tVListas listas);
 void inicializarEdades(tMatrizEdades edades);
@@ -55,6 +70,10 @@ void generarArchivoVotos();
 void leerListasDesdeArchivo(tVListas listas);
 void procesarVotosBinario(tVListas listas, tMatrizEdades edades, int& blancos, int& nulos, int& totalValidos);
 void guardarResultadosEnArchivo(tVListas listas, int blancos, int nulos, int totalValidos);
+NodoListaPol* buscarOInsertarLista(NodoListaPol*& frente, tLista infoL);
+void insertarVotoOrdenadoPorEdad(NodoVoto*& frente, tRVoto infoV);
+void generarListasDesdeArchivos(NodoListaPol*& listaPrincipal);
+void mostrarEstadisticasGeneroYEdad(NodoListaPol* listaPrincipal);
 
 // --- MAIN ---
 int main() {
@@ -62,6 +81,7 @@ int main() {
     tMatrizEdades edades;
     tMatrizCociente cocientes;
     int blancos = 0, nulos = 0, totalValidos = 0;
+    NodoListaPol* listaPrincipal = NULL;
 
     // 1. Generacion de los archivos fisicos
     generarArchivoListas();
@@ -86,6 +106,10 @@ int main() {
 
     // Genera el archivo de salida
     guardarResultadosEnArchivo(listas, blancos, nulos, totalValidos);
+
+    // 6. Procesamiento y salida de estructuras enlazadas
+    generarListasDesdeArchivos(listaPrincipal);
+    mostrarEstadisticasGeneroYEdad(listaPrincipal);
 
     return 0;
 }
@@ -399,5 +423,123 @@ void guardarResultadosEnArchivo(tVListas listas, int blancos, int nulos, int tot
         }
         fclose(arch);
         cout << "\nResultados guardados correctamente en 'ResultadosFinales.txt'.\n";
+    }
+}
+
+// Busca la lista por número. Si no existe, la inserta al final para mantener el orden de listas.
+NodoListaPol* buscarOInsertarLista(NodoListaPol*& frente, tLista infoL) {
+    NodoListaPol* aux = frente;
+    NodoListaPol* ant = NULL;
+
+    while (aux != NULL && aux->infoLista.numero != infoL.numero) {
+        ant = aux;
+        aux = aux->sig;
+    }
+
+    if (aux != NULL) return aux; // Se encontró
+
+    // No se encontró, creamos el nodo
+    NodoListaPol* nuevo = new NodoListaPol;
+    nuevo->infoLista = infoL;
+    nuevo->cantFemenino = 0;
+    nuevo->cantMasculino = 0;
+    nuevo->listaVotos = NULL;
+    nuevo->sig = NULL;
+
+    if (ant == NULL) frente = nuevo;
+    else ant->sig = nuevo;
+
+    return nuevo;
+}
+
+// Inserta el voto en la sublista, ordenado de menor a mayor edad.
+void insertarVotoOrdenadoPorEdad(NodoVoto*& frente, tRVoto infoV) {
+    NodoVoto* nuevo = new NodoVoto;
+    nuevo->info = infoV;
+    nuevo->sig = NULL;
+
+    NodoVoto* aux = frente;
+    NodoVoto* ant = NULL;
+
+    // Recorremos hasta encontrar una edad mayor a la que queremos insertar
+    while (aux != NULL && aux->info.edad < infoV.edad) {
+        ant = aux;
+        aux = aux->sig;
+    }
+
+    if (ant == NULL) {
+        nuevo->sig = frente;
+        frente = nuevo;
+    }
+    else {
+        ant->sig = nuevo;
+        nuevo->sig = aux;
+    }
+}
+
+// Levanta los datos de los archivos y arma la estructura de Listas de Listas.
+void generarListasDesdeArchivos(NodoListaPol*& listaPrincipal) {
+    // 1. Levantamos la información de las Listas Políticas
+    FILE* archListas = fopen("ListasCandidatos.dat", "rb");
+    if (archListas != NULL) {
+        tLista regLista;
+        while (fread(&regLista, sizeof(tLista), 1, archListas)) {
+            buscarOInsertarLista(listaPrincipal, regLista);
+        }
+        fclose(archListas);
+    }
+
+    // 2. Levantamos los Votos y los asignamos a sus sublistas
+    FILE* archVotos = fopen("VotosEmitidos.dat", "rb");
+    if (archVotos != NULL) {
+        tRVoto regVoto;
+        while (fread(&regVoto, sizeof(tRVoto), 1, archVotos)) {
+            // Solo procesamos votos válidos (entre 1 y TOPELISTAS)
+            if (regVoto.lista >= 1 && regVoto.lista <= TOPELISTAS) {
+                // Creamos un registro falso temporal para buscar el nodo con el numero
+                tLista dummyLista;
+                dummyLista.numero = regVoto.lista;
+
+                NodoListaPol* nodoPartido = buscarOInsertarLista(listaPrincipal, dummyLista);
+
+                // Contabilizamos el género[cite: 10]
+                if (regVoto.genero == 'F' || regVoto.genero == 'f') {
+                    nodoPartido->cantFemenino++;
+                }
+                else if (regVoto.genero == 'M' || regVoto.genero == 'm') {
+                    nodoPartido->cantMasculino++;
+                }
+
+                // Insertamos el voto ordenado por edad[cite: 10]
+                insertarVotoOrdenadoPorEdad(nodoPartido->listaVotos, regVoto);
+            }
+        }
+        fclose(archVotos);
+    }
+}
+
+// Recorre la estructura y muestra estadisticas de genero y secuencia de edades[cite: 10]
+void mostrarEstadisticasGeneroYEdad(NodoListaPol* listaPrincipal) {
+    cout << "\n======================================================\n";
+    cout << "   ANALISIS DE ELECTORES\n";
+    cout << "======================================================\n";
+
+    NodoListaPol* auxPol = listaPrincipal;
+    while (auxPol != NULL) {
+        // Para no ensuciar la salida, solo mostramos las listas que recibieron algún voto
+        if (auxPol->listaVotos != NULL) {
+            cout << "\nLista " << auxPol->infoLista.numero << " (" << auxPol->infoLista.nombreLista << ")" << endl;
+            cout << "-> Cantidad de mujeres que la votaron: " << auxPol->cantFemenino << endl;
+            cout << "-> Cantidad de varones que la votaron: " << auxPol->cantMasculino << endl;
+            cout << "\n   Secuencia de votos (Ordenados por edad):" << endl;
+
+            NodoVoto* auxVoto = auxPol->listaVotos;
+            while (auxVoto != NULL) {
+                cout << "      - Edad: " << auxVoto->info.edad << " anos | Genero: " << auxVoto->info.genero << endl;
+                auxVoto = auxVoto->sig;
+            }
+            cout << "------------------------------------------------------\n";
+        }
+        auxPol = auxPol->sig;
     }
 }

@@ -1,4 +1,5 @@
 ﻿  primeraentrega.cpp
-C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(184,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(212,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(208,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\user\Downloads\Nueva carpeta\primeraentrega.cpp(236,70): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+  LINK : no se encontró C:\Users\user\Downloads\Nueva carpeta\TP ALGORITMOS\x64\Debug\TP ALGORITMOS.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
   TP ALGORITMOS.vcxproj -> C:\Users\user\Downloads\Nueva carpeta\TP ALGORITMOS\x64\Debug\TP ALGORITMOS.exe
